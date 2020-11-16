@@ -1,0 +1,22 @@
+--- a/src/bin_cs2cs.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/src/bin_cs2cs.cmake	2020-10-29 09:47:13.000000000 +0100
+@@ -4,15 +4,19 @@
+   apps/utils.cpp
+ )
+ 
+ source_group("Source Files\\Bin" FILES ${CS2CS_SRC})
+ 
+ add_executable(cs2cs ${CS2CS_SRC} ${CS2CS_INCLUDE})
++if (BUILD_STATIC_LIBS)
++	target_link_libraries(cs2cs ${PROJ_LIBRARIES} ${CURL_LIBRARIES} ${TIFF_LIBRARIES})
++else()
+ target_link_libraries(cs2cs ${PROJ_LIBRARIES})
++endif()
+ target_compile_options(cs2cs PRIVATE ${PROJ_CXX_WARN_FLAGS})
+ 
+ install(TARGETS cs2cs
+   RUNTIME DESTINATION ${BINDIR})
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+   target_compile_definitions(cs2cs PRIVATE PROJ_MSVC_DLL_IMPORT=1)
+ endif()

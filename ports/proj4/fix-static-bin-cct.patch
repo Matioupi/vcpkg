@@ -1,0 +1,24 @@
+--- a/src/bin_cct.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/src/bin_cct.cmake	2020-10-29 09:44:39.000000000 +0100
+@@ -5,15 +5,20 @@
+ )
+ set(CCT_INCLUDE apps/optargpm.h)
+ 
+ source_group("Source Files\\Bin" FILES ${CCT_SRC})
+ 
+ add_executable(cct ${CCT_SRC} ${CCT_INCLUDE})
+-target_link_libraries(cct ${PROJ_LIBRARIES})
++if (BUILD_STATIC_LIBS)
++	message(STATUS "***** CURL_LIBRARIES=${CURL_LIBRARIES}")
++	target_link_libraries(cct ${PROJ_LIBRARIES} ${CURL_LIBRARIES} ${TIFF_LIBRARIES})
++else()
++	target_link_libraries(cct ${PROJ_LIBRARIES})
++endif()
+ target_compile_options(cct PRIVATE ${PROJ_CXX_WARN_FLAGS})
+ 
+ install(TARGETS cct
+   RUNTIME DESTINATION ${BINDIR})
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+   target_compile_definitions(cct PRIVATE PROJ_MSVC_DLL_IMPORT=1)
+ endif()

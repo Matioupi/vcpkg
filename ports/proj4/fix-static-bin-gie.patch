@@ -1,0 +1,22 @@
+--- a/src/bin_gie.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/src/bin_gie.cmake	2020-10-29 09:48:44.000000000 +0100
+@@ -5,15 +5,19 @@
+ )
+ set(GIE_INCLUDE apps/optargpm.h)
+ 
+ source_group("Source Files\\Bin" FILES ${GIE_SRC})
+ 
+ add_executable(gie ${GIE_SRC} ${GIE_INCLUDE})
++if (BUILD_STATIC_LIBS)
++	target_link_libraries(gie ${PROJ_LIBRARIES} ${CURL_LIBRARIES} ${TIFF_LIBRARIES})
++else()
+ target_link_libraries(gie ${PROJ_LIBRARIES})
++endif()
+ target_compile_options(gie PRIVATE ${PROJ_CXX_WARN_FLAGS})
+ 
+ install(TARGETS gie
+   RUNTIME DESTINATION ${BINDIR})
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+   target_compile_definitions(gie PRIVATE PROJ_MSVC_DLL_IMPORT=1)
+ endif()

@@ -1,0 +1,22 @@
+--- a/src/bin_projsync.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/src/bin_projsync.cmake	2020-10-29 09:50:17.000000000 +0100
+@@ -3,14 +3,18 @@
+ source_group("Source Files\\Bin" FILES ${PROJSYNC_SRC})
+ 
+ add_executable(bin_projsync ${PROJSYNC_SRC})
+ set_target_properties(bin_projsync
+   PROPERTIES
+   OUTPUT_NAME projsync)
+-target_link_libraries(bin_projsync ${PROJ_LIBRARIES})
++if (BUILD_STATIC_LIBS)
++	target_link_libraries(bin_projsync ${PROJ_LIBRARIES} ${CURL_LIBRARIES} ${TIFF_LIBRARIES})
++else()
++	target_link_libraries(bin_projsync ${PROJ_LIBRARIES})
++endif()
+ target_compile_options(bin_projsync PRIVATE ${PROJ_CXX_WARN_FLAGS})
+ install(TARGETS bin_projsync
+   RUNTIME DESTINATION ${BINDIR})
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+   target_compile_definitions(bin_projsync PRIVATE PROJ_MSVC_DLL_IMPORT=1)
+ endif()

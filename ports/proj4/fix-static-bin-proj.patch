@@ -1,0 +1,22 @@
+--- a/src/bin_proj.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/src/bin_proj.cmake	2020-10-29 09:49:19.000000000 +0100
+@@ -7,15 +7,19 @@
+ source_group("Source Files\\Bin" FILES ${PROJ_SRC})
+ 
+ add_executable(binproj ${PROJ_SRC})
+ set_target_properties(binproj
+   PROPERTIES
+   RUNTIME_OUTPUT_NAME proj)
++if (BUILD_STATIC_LIBS)
++	target_link_libraries(binproj ${PROJ_LIBRARIES} ${CURL_LIBRARIES} ${TIFF_LIBRARIES})
++else()
+ target_link_libraries(binproj ${PROJ_LIBRARIES})
++endif()
+ target_compile_options(binproj PRIVATE ${PROJ_CXX_WARN_FLAGS})
+ 
+ install(TARGETS binproj
+   RUNTIME DESTINATION ${BINDIR})
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+   target_compile_definitions(binproj PRIVATE PROJ_MSVC_DLL_IMPORT=1)
+ endif()

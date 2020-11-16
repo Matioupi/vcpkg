@@ -1,0 +1,22 @@
+--- a/src/bin_geod.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/src/bin_geod.cmake	2020-10-29 09:47:58.000000000 +0100
+@@ -6,15 +6,19 @@
+ )
+ set(GEOD_INCLUDE apps/geod_interface.h)
+ 
+ source_group("Source Files\\Bin" FILES ${GEOD_SRC} ${GEOD_INCLUDE})
+ 
+ add_executable(geod ${GEOD_SRC} ${GEOD_INCLUDE})
++if (BUILD_STATIC_LIBS)
++	target_link_libraries(geod ${PROJ_LIBRARIES} ${CURL_LIBRARIES} ${TIFF_LIBRARIES})
++else()
+ target_link_libraries(geod ${PROJ_LIBRARIES})
++endif()
+ target_compile_options(geod PRIVATE ${PROJ_CXX_WARN_FLAGS})
+ 
+ install(TARGETS geod
+   RUNTIME DESTINATION ${BINDIR})
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+   target_compile_definitions(geod PRIVATE PROJ_MSVC_DLL_IMPORT=1)
+ endif()

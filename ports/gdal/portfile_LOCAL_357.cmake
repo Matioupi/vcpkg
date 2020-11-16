@@ -125,9 +125,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
     SOURCE_PATH ${SOURCE_PATH}
     INSTALL_COMMAND install devinstall
     OPTIONS_RELEASE
-      ${NMAKE_OPTIONS_REL}
+        "${NMAKE_OPTIONS_REL}"
     OPTIONS_DEBUG
-      ${NMAKE_OPTIONS_DBG}
+        "${NMAKE_OPTIONS_DBG}"
   )
 
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -136,10 +136,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND GDAL_EXES
-    "${NMAKE_OPTIONS_REL}"
+        gdal_contour
         gdal_grid
         gdal_rasterize
-    "install"
+        gdal_translate
         gdal_viewshed
         gdaladdo
         gdalbuildvrt
@@ -152,7 +152,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         gdalmdimtranslate
         gdalserver
         gdalsrsinfo
-    "devinstall"
+        gdaltindex
         gdaltransform
         gdalwarp
         gnmanalyse

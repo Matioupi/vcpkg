@@ -121,25 +121,59 @@ if (VCPKG_TARGET_IS_WINDOWS)
   )
 
   # Begin build process
+<<<<<<< HEAD
   vcpkg_install_nmake(
     SOURCE_PATH ${SOURCE_PATH}
     INSTALL_COMMAND install devinstall
     OPTIONS_RELEASE
-      ${NMAKE_OPTIONS_REL}
+        "${NMAKE_OPTIONS_REL}"
     OPTIONS_DEBUG
-      ${NMAKE_OPTIONS_DBG}
+        "${NMAKE_OPTIONS_DBG}"
   )
+=======
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    ################
+    # Release build
+    ################
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
+    vcpkg_execute_required_process(
+      COMMAND ${NMAKE} -f makefile.vc
+      ${NMAKE_OPTIONS_REL}
+      WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+      LOGNAME nmake-build-${TARGET_TRIPLET}-release
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+  endif()
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    ################
+    # Debug build
+    ################
+
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+    vcpkg_execute_required_process(
+      COMMAND ${NMAKE} /G -f makefile.vc
+      ${NMAKE_OPTIONS_DBG}
+      WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+      LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+  endif()
+
+  message(STATUS "Packaging ${TARGET_TRIPLET}")
+>>>>>>> refs/remotes/origin/master
 
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
   endif()
 
+<<<<<<< HEAD
   if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND GDAL_EXES
-    "${NMAKE_OPTIONS_REL}"
+        gdal_contour
         gdal_grid
         gdal_rasterize
-    "install"
+        gdal_translate
         gdal_viewshed
         gdaladdo
         gdalbuildvrt
@@ -152,7 +186,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         gdalmdimtranslate
         gdalserver
         gdalsrsinfo
-    "devinstall"
+        gdaltindex
         gdaltransform
         gdalwarp
         gnmanalyse
@@ -165,6 +199,29 @@ if (VCPKG_TARGET_IS_WINDOWS)
         testepsg
     )
     vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
+=======
+  vcpkg_execute_required_process(
+    COMMAND ${NMAKE} -f makefile.vc
+    ${NMAKE_OPTIONS_REL}
+    install
+    devinstall
+    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+    LOGNAME nmake-install-${TARGET_TRIPLET}
+  )
+
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+      file(COPY ${SOURCE_PATH_RELEASE}/gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+      file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
+    endif()
+
+>>>>>>> refs/remotes/origin/master
   else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
   endif()

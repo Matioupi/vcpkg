@@ -2,8 +2,7 @@ diff --git a/nmake.opt b/nmake.opt
 index 88e197c..308eddd 100644
 --- a/nmake.opt
 +++ b/nmake.opt
-@@ -147,11 +147,21 @@
- CXX_PDB_FLAGS=/Zi /Fd$(GDAL_PDB)
+@@ -147,11 +147,21 @@ CXX_PDB_FLAGS=/Zi /Fd$(GDAL_PDB)
  CXX_PDB_FLAGS=
  !ENDIF
  

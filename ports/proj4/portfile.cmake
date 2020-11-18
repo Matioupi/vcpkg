@@ -148,7 +148,6 @@ endif()
 
 if ("tool" IN_LIST FEATURES)
 	vcpkg_copy_tools(SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin/ TOOL_NAMES cct cs2cs geod gie proj projinfo projsync AUTO_CLEAN)
-	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
@@ -157,7 +156,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if ("tool" IN_LIST FEATURES)
-	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+	file(GLOB DEBUG_TOOL_EXE "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+	file(REMOVE ${DEBUG_TOOL_EXE})
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
